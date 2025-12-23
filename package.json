@@ -1,0 +1,58 @@
+{
+  "name": "taskflow-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TaskFlow - Professional full-stack productivity and project management system",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "preinstall": "node scripts/check-prerequisites.js",
+    "postinstall": "echo '\n✅ Dependencies installed! Run: npm run setup'",
+    "setup": "npm run setup:all && npm run validate",
+    "setup:all": "npm run setup:backend && npm run setup:frontend && npm run setup:extension && npm run setup:agent",
+    "setup:backend": "cd packages/backend && npm install --legacy-peer-deps",
+    "setup:frontend": "cd packages/frontend && npm install --legacy-peer-deps",
+    "setup:extension": "echo '✅ Browser extension ready (no build needed)'",
+    "setup:agent": "cd packages/desktop-agent && npm install",
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,green\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd packages/backend && npm run dev",
+    "dev:frontend": "cd packages/frontend && npm run dev",
+    "dev:agent": "cd packages/desktop-agent && npm start",
+    "start:backend": "cd packages/backend && npm start",
+    "start:frontend": "cd packages/frontend && npm run preview",
+    "build:all": "npm run build:frontend && npm run build:agent",
+    "build:frontend": "cd packages/frontend && npm run build",
+    "build:agent": "cd packages/desktop-agent && npm run build",
+    "validate": "node scripts/validate.js",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "echo 'Linting not configured yet'",
+    "clean": "rm -rf node_modules packages/*/node_modules packages/*/dist packages/*/build",
+    "clean:cache": "rm -rf packages/*/.vite packages/*/dist",
+    "reset": "npm run clean && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/taskflow-monorepo"
+  },
+  "keywords": [
+    "monorepo",
+    "productivity",
+    "project-management",
+    "mern-stack",
+    "task-tracking",
+    "time-tracking",
+    "analytics",
+    "electron",
+    "browser-extension"
+  ],
+  "author": "",
+  "license": "MIT"
+}

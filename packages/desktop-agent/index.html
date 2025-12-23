@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow Desktop Agent</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1a1a1a 100%);
+            color: #f8f8f8;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #FF006E;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(255, 0, 110, 0.3);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 900;
+            color: #0A0A0A;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: #1a1a1a;
+            border: 2px solid #3a3a3a;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #FF006E;
+            font-weight: 700;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .stat:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            color: #f8f8f8;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status.active {
+            background: #06FFA5;
+            color: #0A0A0A;
+        }
+
+        .status.inactive {
+            background: #3a3a3a;
+            color: #888;
+        }
+
+        .button {
+            background: #FF006E;
+            color: #0A0A0A;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background: #00F0FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background: #3a3a3a;
+            color: #f8f8f8;
+        }
+
+        .button.secondary:hover {
+            background: #4a4a4a;
+            box-shadow: none;
+        }
+
+        .current-app {
+            background: linear-gradient(135deg, #FF006E, #00F0FF);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .current-app h3 {
+            font-size: 14px;
+            color: #0A0A0A;
+            margin-bottom: 8px;
+            opacity: 0.7;
+        }
+
+        .current-app .app-name {
+            font-size: 24px;
+            font-weight: 900;
+            color: #0A0A0A;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 50px auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 2px solid #3a3a3a;
+            border-radius: 8px;
+            color: #f8f8f8;
+            font-size: 14px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #FF006E;
+        }
+
+        .error {
+            background: #ff0000;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #888;
+        }
+
+        .spinner {
+            border: 3px solid #3a3a3a;
+            border-top: 3px solid #FF006E;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .app-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .app-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .app-item:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 TaskFlow Desktop Agent</h1>
+        </div>
+
+        <div class="content" id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        let isAuthenticated = false;
+        let currentStatus = null;
+
+        // Initialize
+        async function init() {
+            const status = await ipcRenderer.invoke('get-status');
+            isAuthenticated = status.isAuthenticated;
+            currentStatus = status;
+
+            if (isAuthenticated) {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        }
+
+        // Show login form
+        function showLogin() {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <div class="login-form">
+                    <div class="card">
+                        <h2>Login to TaskFlow</h2>
+                        <div id="login-error"></div>
+                        <form id="login-form">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="email" required placeholder="Enter your email">
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" id="password" required placeholder="Enter your password">
+                            </div>
+                            <button type="submit" class="button">Login</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+        }
+
+        // Handle login
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const result = await ipcRenderer.invoke('login', { email, password });
+
+            if (result.success) {
+                isAuthenticated = true;
+                showDashboard();
+            } else {
+                document.getElementById('login-error').innerHTML = `
+                    <div class="error">${result.error}</div>
+                `;
+            }
+        }
+
+        // Show dashboard
+        async function showDashboard() {
+            const status = await ipcRenderer.invoke('get-status');
+            const stats = await ipcRenderer.invoke('get-stats');
+
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                ${status.currentApp ? `
+                    <div class="current-app">
+                        <h3>Currently Tracking</h3>
+                        <div class="app-name">${status.currentApp}</div>
+                    </div>
+                ` : ''}
+
+                <div class="card">
+                    <h2>Status</h2>
+                    <div class="stat">
+                        <span class="stat-label">Tracking Status</span>
+                        <span class="status ${status.isTracking ? 'active' : 'inactive'}">
+                            ${status.isTracking ? '● Active' : '○ Inactive'}
+                        </span>
+                    </div>
+                    <button class="button" onclick="toggleTracking()">
+                        ${status.isTracking ? 'Pause Tracking' : 'Start Tracking'}
+                    </button>
+                </div>
+
+                ${!stats.error ? `
+                    <div class="card">
+                        <h2>Today's Activity</h2>
+                        <div class="stat">
+                            <span class="stat-label">Total Time Tracked</span>
+                            <span class="stat-value">${formatTime(stats.totalTime)}</span>
+                        </div>
+                    </div>
+
+                    ${stats.topApps && stats.topApps.length > 0 ? `
+                        <div class="card">
+                            <h2>Top Applications</h2>
+                            <div class="app-list">
+                                ${stats.topApps.map(app => `
+                                    <div class="app-item">
+                                        <span>${app.name}</span>
+                                        <span>${formatTime(app.time)}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                ` : ''}
+
+                <div class="card">
+                    <h2>Actions</h2>
+                    <button class="button secondary" onclick="handleLogout()">Logout</button>
+                </div>
+            `;
+        }
+
+        // Toggle tracking
+        async function toggleTracking() {
+            await ipcRenderer.invoke('toggle-tracking');
+            showDashboard();
+        }
+
+        // Handle logout
+        async function handleLogout() {
+            await ipcRenderer.invoke('logout');
+            isAuthenticated = false;
+            showLogin();
+        }
+
+        // Format time
+        function formatTime(seconds) {
+            if (!seconds) return '0m';
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            }
+            return `${minutes}m`;
+        }
+
+        // Listen for activity updates
+        ipcRenderer.on('activity-update', (event, activity) => {
+            if (isAuthenticated) {
+                showDashboard();
+            }
+        });
+
+        // Listen for errors
+        ipcRenderer.on('tracker-error', (event, error) => {
+            console.error('Tracker error:', error);
+        });
+
+        // Initialize on load
+        init();
+
+        // Refresh every 10 seconds
+        setInterval(() => {
+            if (isAuthenticated) {
+                showDashboard();
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 350px;
+      min-height: 400px;
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0A0A0A 0%, #1a1a1a 100%);
+      color: #f8f8f8;
+    }
+    
+    h1 {
+      font-size: 20px;
+      margin: 0 0 10px 0;
+      background: linear-gradient(135deg, #FF006E, #00F0FF);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .status {
+      padding: 15px;
+      background: #2a2a2a;
+      border: 2px solid #3a3a3a;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .status-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    .status-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .badge {
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .badge-success {
+      background: #06FFA5;
+      color: #0A0A0A;
+    }
+    
+    .badge-danger {
+      background: #FF006E;
+      color: #f8f8f8;
+    }
+    
+    .badge-warning {
+      background: #FFBE0B;
+      color: #0A0A0A;
+    }
+    
+    .login-section {
+      background: #2a2a2a;
+      padding: 15px;
+      border: 2px solid #3a3a3a;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+      color: #f8f8f8;
+    }
+    
+    input {
+      width: 100%;
+      padding: 10px;
+      background: #1a1a1a;
+      border: 2px solid #3a3a3a;
+      color: #f8f8f8;
+      font-size: 14px;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    
+    input:focus {
+      outline: none;
+      border-color: #FF006E;
+    }
+    
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #FF006E;
+      color: #f8f8f8;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+      transition: all 0.3s ease;
+    }
+    
+    button:hover {
+      background: #D90058;
+      transform: translateY(-2px);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    .btn-secondary {
+      background: #00F0FF;
+      color: #0A0A0A;
+      margin-top: 10px;
+    }
+    
+    .btn-secondary:hover {
+      background: #00C8D4;
+    }
+    
+    .stats {
+      background: #2a2a2a;
+      padding: 15px;
+      border: 2px solid #3a3a3a;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #3a3a3a;
+      font-size: 13px;
+    }
+    
+    .stat-item:last-child {
+      border-bottom: none;
+    }
+    
+    .stat-value {
+      font-weight: 600;
+      color: #00F0FF;
+    }
+    
+    .message {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+    
+    .message-success {
+      background: rgba(6, 255, 165, 0.1);
+      border: 1px solid #06FFA5;
+      color: #06FFA5;
+    }
+    
+    .message-error {
+      background: rgba(255, 0, 110, 0.1);
+      border: 1px solid #FF006E;
+      color: #FF006E;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .links {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 12px;
+    }
+    
+    .links a {
+      color: #00F0FF;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+    
+    .links a:hover {
+      text-decoration: underline;
+    }
+    
+    .current-site {
+      background: #1a1a1a;
+      padding: 10px;
+      border-radius: 4px;
+      margin-top: 10px;
+      font-size: 12px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <h1>🚀 TaskFlow Tracker</h1>
+  
+  <div id="message" class="message hidden"></div>
+  
+  <div id="loginSection" class="login-section">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" id="password" placeholder="••••••••">
+    </div>
+    <button id="loginBtn">Login</button>
+    <div class="links">
+      <a href="http://localhost:3000/register" target="_blank">Register</a>
+      <a href="http://localhost:3000" target="_blank">Open TaskFlow</a>
+    </div>
+  </div>
+  
+  <div id="trackingSection" class="hidden">
+    <div class="status">
+      <div class="status-item">
+        <span>Status:</span>
+        <span id="trackingStatus" class="badge badge-success">Tracking</span>
+      </div>
+      <div class="status-item">
+        <span>Current Site:</span>
+        <span id="currentSite" style="font-weight: 600; color: #00F0FF;">-</span>
+      </div>
+    </div>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <span>Today's Tracking</span>
+        <span class="stat-value" id="todayTime">0h 0m</span>
+      </div>
+      <div class="stat-item">
+        <span>Active Tabs</span>
+        <span class="stat-value" id="tabCount">-</span>
+      </div>
+      <div class="stat-item">
+        <span>Websites Visited</span>
+        <span class="stat-value" id="sitesCount">-</span>
+      </div>
+    </div>
+    
+    <button id="dashboardBtn">View Analytics Dashboard</button>
+    <button id="logoutBtn" class="btn-secondary">Logout</button>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
