@@ -1,4 +1,5 @@
 const EventEmitter = require('events');
+const activeWin = require('active-win');
 
 class ActivityTracker extends EventEmitter {
   constructor(apiClient) {
@@ -10,17 +11,16 @@ class ActivityTracker extends EventEmitter {
     this.checkInterval = null;
     this.syncInterval = null;
     this.currentApp = null;
-    this.activeWin = null;
   }
   
   async initialize() {
     try {
-      // Dynamic import for ESM module (active-win v9+)
-      const activeWinModule = await import('active-win');
-      this.activeWin = activeWinModule.default;
+      // active-win@8.0.0 - secure, maintained by Sindre Sorhus
       console.log('✅ Activity tracker initialized');
+      console.log(`   Platform: ${process.platform}`);
+      console.log('   Using active-win@8.0.0 (secure, maintained)');
     } catch (error) {
-      console.error('❌ Failed to load active-win:', error.message);
+      console.error('❌ Failed to initialize tracker:', error.message);
       throw error;
     }
   }
@@ -31,10 +31,7 @@ class ActivityTracker extends EventEmitter {
       return;
     }
     
-    // Initialize if needed
-    if (!this.activeWin) {
-      await this.initialize();
-    }
+    await this.initialize();
     
     this.isTracking = true;
     console.log('🚀 Activity tracking started');
@@ -70,20 +67,21 @@ class ActivityTracker extends EventEmitter {
   
   async checkActiveWindow() {
     try {
-      if (!this.activeWin) return;
-
-      const window = await this.activeWin();
+      // active-win returns a Promise
+      const window = await activeWin();
       
-      if (!window) {
+      if (!window || !window.owner) {
         this.endActivity();
         return;
       }
       
-      const appName = window.owner.name;
+      // Extract app name
+      const appName = window.owner.name || window.owner.processName || 'Unknown';
+      const title = window.title || '';
       
       if (appName !== this.currentApp) {
         this.endActivity();
-        this.startActivity(appName, window.title);
+        this.startActivity(appName, title);
       }
     } catch (error) {
       console.error('Error checking window:', error.message);
@@ -144,7 +142,7 @@ class ActivityTracker extends EventEmitter {
   async saveActivity(activity) {
     try {
       await this.apiClient.saveActivity(activity);
-      console.log('💾 Activity saved');
+      console.log('💾 Activity saved:', activity.application, `(${activity.duration}s)`);
     } catch (error) {
       console.error('Save error:', error.message);
       this.emit('error', error);

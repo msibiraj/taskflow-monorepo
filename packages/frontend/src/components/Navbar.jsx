@@ -20,17 +20,41 @@ const Navbar = ({ onBack }) => {
               Back
             </button>
           )}
-          {!onBack && location.pathname !== '/analytics' && (
-            <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/analytics')}>
-              <i className="bi bi-graph-up me-2"></i>
-              Analytics
-            </button>
+          {!onBack && location.pathname !== '/analytics' && location.pathname !== '/categories' && (
+            <>
+              <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/analytics')}>
+                <i className="bi bi-graph-up me-2"></i>
+                Analytics
+              </button>
+              <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/categories')}>
+                <i className="bi bi-tags me-2"></i>
+                Categories
+              </button>
+            </>
           )}
           {location.pathname === '/analytics' && (
-            <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/dashboard')}>
-              <i className="bi bi-kanban me-2"></i>
-              Boards
-            </button>
+            <>
+              <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/dashboard')}>
+                <i className="bi bi-kanban me-2"></i>
+                Boards
+              </button>
+              <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/categories')}>
+                <i className="bi bi-tags me-2"></i>
+                Categories
+              </button>
+            </>
+          )}
+          {location.pathname === '/categories' && (
+            <>
+              <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/dashboard')}>
+                <i className="bi bi-kanban me-2"></i>
+                Boards
+              </button>
+              <button className="btn btn-outline-custom btn-sm" onClick={() => navigate('/analytics')}>
+                <i className="bi bi-graph-up me-2"></i>
+                Analytics
+              </button>
+            </>
           )}
           <span className="text-light d-none d-md-inline">
             Welcome, <strong>{user?.name}</strong>

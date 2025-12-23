@@ -17,6 +17,7 @@ npm start
 ## ✨ Features
 
 - **🔍 Automatic Tracking:** Detects active applications every 2 seconds
+- **🌍 Cross-Platform:** Works on Windows, macOS, and Linux  
 - **💾 Smart Saving:** Syncs activities every 30 seconds
 - **🎨 Beautiful UI:** Brutalist design matching TaskFlow
 - **📊 Real-time Stats:** See your activity as it happens
@@ -29,6 +30,10 @@ npm start
 - **Node.js** 16+ (for Electron 27)
 - **Backend** running on port 5000 (or custom)
 - **TaskFlow Account** (register in main app)
+- **Platform Support:**
+  - ✅ Windows 10/11
+  - ✅ macOS 10.13+
+  - ✅ Linux (X11 and Wayland)
 
 ## 🔧 Configuration
 

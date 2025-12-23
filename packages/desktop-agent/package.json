@@ -5,6 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "start:safe": "electron . --disable-gpu --no-sandbox 2>&1 | grep -v 'GetVSyncParametersIfAvailable'",
+    "start:debug": "electron . --enable-logging",
     "build": "electron-builder",
     "build:win": "electron-builder --win",
     "build:mac": "electron-builder --mac",
@@ -15,8 +17,8 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^1.6.2",
-    "active-win": "^9.0.0",
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "active-win": "^8.0.0"
   },
   "devDependencies": {
     "electron": "^27.0.0",

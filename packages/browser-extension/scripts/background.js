@@ -31,12 +31,12 @@ chrome.runtime.onInstalled.addListener(() => {
   });
 });
 
-// Listen for token from popup
+// Listen for token from popup and unified tracking messages
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === 'SET_TOKEN') {
     token = message.token;
     chrome.storage.local.set({ authToken: token });
-    console.log('Token saved');
+    console.log('✅ Token saved');
     sendResponse({ success: true });
   } else if (message.type === 'GET_STATUS') {
     sendResponse({ 
@@ -51,6 +51,41 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         ...currentActivity.metadata,
         ...message.data
       };
+    }
+    sendResponse({ success: true });
+  } else if (message.type === 'START_TASK_TRACKING') {
+    // Unified tracking started - add task context to activities
+    console.log('🎯 Unified tracking started for task:', message.taskTitle);
+    if (currentActivity) {
+      currentActivity.metadata = {
+        ...currentActivity.metadata,
+        taskId: message.taskId,
+        taskTitle: message.taskTitle,
+        isUnifiedTracking: true
+      };
+    }
+    sendResponse({ success: true });
+  } else if (message.type === 'PAUSE_TRACKING') {
+    // Idle detected - pause tracking
+    console.log('⏸️ Tracking paused (idle)');
+    endCurrentActivity();
+    sendResponse({ success: true });
+  } else if (message.type === 'RESUME_TRACKING') {
+    // User active again - resume tracking
+    console.log('▶️ Tracking resumed');
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]) {
+        handleTabSwitch(tabs[0]);
+      }
+    });
+    sendResponse({ success: true });
+  } else if (message.type === 'STOP_TASK_TRACKING') {
+    // Unified tracking stopped
+    console.log('⏹️ Unified tracking stopped');
+    if (currentActivity && currentActivity.metadata) {
+      currentActivity.metadata.isUnifiedTracking = false;
+      delete currentActivity.metadata.taskId;
+      delete currentActivity.metadata.taskTitle;
     }
     sendResponse({ success: true });
   }

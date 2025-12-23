@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../services/api';
+import RichTextEditor from './RichTextEditor';
+import UnifiedTracking from './UnifiedTracking';
 
 const CardDetailsModal = ({ card, listId, board, onClose, onUpdate }) => {
   const { user } = useAuth();
@@ -299,15 +301,14 @@ const CardDetailsModal = ({ card, listId, board, onClose, onUpdate }) => {
               />
             </div>
 
-            {/* Description */}
+            {/* Description with Rich Text Editor */}
             <div className="mb-3">
               <label className="form-label">Description</label>
-              <textarea
-                className="form-control form-control-custom"
-                rows="3"
+              <RichTextEditor 
                 value={editedCard.description || ''}
-                onChange={(e) => handleUpdateBasicInfo('description', e.target.value)}
-              ></textarea>
+                onChange={(value) => handleUpdateBasicInfo('description', value)}
+                placeholder="Add a detailed description... Supports Markdown!"
+              />
             </div>
 
             {/* Priority & Due Date */}
@@ -370,6 +371,16 @@ const CardDetailsModal = ({ card, listId, board, onClose, onUpdate }) => {
                 </div>
               )}
             </div>
+
+            <hr className="divider" />
+
+            {/* Unified Tracking with Idle Detection */}
+            <UnifiedTracking 
+              task={editedCard}
+              onTrackingChange={(isTracking) => {
+                console.log('Tracking state changed:', isTracking);
+              }}
+            />
 
             <hr className="divider" />
 

@@ -4,6 +4,12 @@ const Store = require('electron-store');
 const ActivityTracker = require('./tracker');
 const ApiClient = require('./api-client');
 
+// Fix GPU warnings on Linux
+if (process.platform === 'linux') {
+  app.disableHardwareAcceleration();
+  console.log('🔧 GPU acceleration disabled (Linux fix)');
+}
+
 const store = new Store();
 let tray = null;
 let mainWindow = null;
