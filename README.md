@@ -386,8 +386,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 - 📧 Email: sibiraj.munirathinam@gmail.com
-- 🐛 Issues: [GitHub Issues](https://github.com/sibirajm/taskflow-monorepo/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/sibirajm/taskflow-monorepo/discussions)
+- 🐛 Issues: [GitHub Issues](https://github.com/msibiraj/taskflow-monorepo/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/msibiraj/taskflow-monorepo/discussions)
 
 ---
 
